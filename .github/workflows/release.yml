@@ -1,0 +1,55 @@
+name: Release
+
+# Déclenché par un tag "vX.Y.Z" (ex: git tag v0.1.0 && git push --tags).
+# Build un artefact et le joint à une GitHub Release.
+#
+# État actuel : APK Android en signature debug (Flutter la fournit par défaut,
+# aucune installation supplémentaire nécessaire) — installable pour des tests,
+# mais PAS publiable tel quel sur le Play Store.
+#
+# Pour activer la publication sur les stores, ajouter dans les secrets du repo
+# (Settings > Secrets and variables > Actions) puis décommenter les étapes
+# correspondantes ci-dessous :
+#   Android : ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD,
+#             ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD,
+#             GOOGLE_PLAY_SERVICE_ACCOUNT_JSON (pour un upload auto via fastlane/Play Console API)
+#   iOS     : App Store Connect API key (APPLE_API_KEY_ID/ISSUER_ID/KEY_BASE64),
+#             certificat de distribution + provisioning profile
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  FLUTTER_VERSION: "3.35.2"
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - run: flutter pub get
+      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: flutter test
+
+      # TODO (Phase signature prod) : remplacer par `flutter build apk --release`
+      # une fois le keystore de production configuré (voir secrets listés en tête de fichier).
+      - run: flutter build apk --debug
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/app-debug.apk
+          generate_release_notes: true

@@ -1,16 +1,26 @@
-# bookreader
+# BookReader
 
-A new Flutter project.
+Application mobile Flutter (Android + iOS) qui transforme un livre — PDF, EPUB ou TXT — en lecture audio via synthèse vocale.
 
-## Getting Started
+Voir [ARCHITECTURE.md](ARCHITECTURE.md) pour l'architecture complète, le périmètre fonctionnel par phase et les choix techniques.
 
-This project is a starting point for a Flutter application.
+## Démarrer
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs   # génère les adaptateurs Hive
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Tests & analyse
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter analyze
+flutter test
+dart format --output=none --set-exit-if-changed .
+```
+
+## CI/CD
+
+- `.github/workflows/ci.yml` : sur chaque push/PR vers `main` — analyse statique, format, tests, build Android (debug) et iOS (no-codesign).
+- `.github/workflows/release.yml` : sur un tag `vX.Y.Z` — build un APK et le publie en GitHub Release. La signature de production (Play Store) et la publication iOS (App Store Connect) nécessitent l'ajout de secrets au repo — voir les commentaires en tête du fichier.
