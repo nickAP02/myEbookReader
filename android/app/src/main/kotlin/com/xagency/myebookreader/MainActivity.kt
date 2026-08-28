@@ -1,4 +1,4 @@
-package com.moon.bookreader.bookreader
+package com.xagency.myebookreader
 
 import io.flutter.embedding.android.FlutterActivity
 

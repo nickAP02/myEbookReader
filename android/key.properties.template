@@ -1,0 +1,7 @@
+# Copie ce fichier en "key.properties" (même dossier) et remplis les valeurs
+# avec ton propre keystore de production. "key.properties" est ignoré par git
+# (voir android/.gitignore) — ne jamais committer le vrai fichier ni le .jks.
+storePassword=
+keyPassword=
+keyAlias=upload
+storeFile=../../upload-keystore.jks

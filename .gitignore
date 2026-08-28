@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Signature de production — ne jamais committer (filet de sécurité en plus
+# de android/.gitignore, quel que soit l'endroit où le fichier atterrit)
+/android/key.properties
+*.jks
+*.keystore
