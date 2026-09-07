@@ -23,6 +23,7 @@ class Book extends HiveObject {
     this.coverImagePath,
     required this.importedAt,
     required this.totalSegments,
+    required this.languageTag,
   });
 
   @HiveField(0)
@@ -48,4 +49,9 @@ class Book extends HiveObject {
 
   @HiveField(7)
   final int totalSegments;
+
+  /// Tag BCP-47 (ex: "fr-FR", "en-US") détecté à l'import, utilisé pour
+  /// choisir la bonne voix TTS. Voir [LanguageDetector].
+  @HiveField(8)
+  final String languageTag;
 }

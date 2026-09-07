@@ -89,7 +89,11 @@ class PlayerController extends Notifier<PlayerState> {
   }
 
   Future<void> _load() async {
-    final segments = await ref.read(bookRepositoryProvider).getSegments(bookId);
+    final repository = ref.read(bookRepositoryProvider);
+    final book = await repository.getBook(bookId);
+    await _tts.setLanguage(book?.languageTag ?? 'fr-FR');
+
+    final segments = await repository.getSegments(bookId);
     final progress = ref.read(progressRepositoryProvider).get(bookId);
     final bookmarks = ref.read(bookmarkRepositoryProvider).forBook(bookId);
     state = state.copyWith(

@@ -16,6 +16,18 @@ class TtsService {
 
   Future<void> setSpeechRate(double rate) => _tts.setSpeechRate(rate);
 
+  /// Sans langue explicite, certains moteurs TTS (surtout sur des appareils
+  /// d'entrée de gamme) retombent sur un mode dégradé qui épelle le texte
+  /// lettre par lettre au lieu de le lire naturellement.
+  Future<void> setLanguage(String languageTag) async {
+    try {
+      await _tts.setLanguage(languageTag);
+    } catch (_) {
+      // Tag refusé par le moteur : on garde sa langue par défaut plutôt que
+      // de bloquer la lecture.
+    }
+  }
+
   Future<void> setVoice(Map<String, String> voice) => _tts.setVoice(voice);
 
   Future<List<Map<String, String>>> getVoices() async {

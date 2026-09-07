@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/utils/language_detector.dart';
 import '../../audio_player/domain/bookmark.dart';
 import '../../audio_player/domain/reading_progress.dart';
 import '../../book_import/data/parsers/parser_factory.dart';
@@ -35,6 +36,9 @@ class HiveBookRepository implements BookRepository {
 
     final parser = resolveParser(storedFile.path);
     final parsed = await parser.parse(storedFile);
+    final languageTag = LanguageDetector.detectLanguageTag(
+      parsed.segments.take(30).join(' '),
+    );
 
     final book = Book(
       id: id,
@@ -44,6 +48,7 @@ class HiveBookRepository implements BookRepository {
       localFilePath: storedFile.path,
       importedAt: DateTime.now(),
       totalSegments: parsed.segments.length,
+      languageTag: languageTag,
     );
 
     await _books.put(id, book);
@@ -56,6 +61,9 @@ class HiveBookRepository implements BookRepository {
   Future<List<String>> getSegments(String bookId) async {
     return _content.get(bookId)?.segments ?? const [];
   }
+
+  @override
+  Future<Book?> getBook(String bookId) async => _books.get(bookId);
 
   @override
   Future<void> deleteBook(String bookId) async {

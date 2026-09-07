@@ -5,6 +5,8 @@ import 'book.dart';
 abstract class BookRepository {
   Future<List<Book>> getAllBooks();
 
+  Future<Book?> getBook(String bookId);
+
   Future<Book> importFile(File pickedFile);
 
   Future<List<String>> getSegments(String bookId);

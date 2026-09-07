@@ -25,13 +25,14 @@ class BookAdapter extends TypeAdapter<Book> {
       coverImagePath: fields[5] as String?,
       importedAt: fields[6] as DateTime,
       totalSegments: fields[7] as int,
+      languageTag: fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class BookAdapter extends TypeAdapter<Book> {
       ..writeByte(6)
       ..write(obj.importedAt)
       ..writeByte(7)
-      ..write(obj.totalSegments);
+      ..write(obj.totalSegments)
+      ..writeByte(8)
+      ..write(obj.languageTag);
   }
 
   @override
